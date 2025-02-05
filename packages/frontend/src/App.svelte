@@ -7,16 +7,32 @@ import Route from './lib/Route.svelte';
 import { onMount } from 'svelte';
 import { getRouterState } from './api/client';
 import HelloWorld from './HelloWorld.svelte';
+import type { ServerInfo } from '@podman-desktop-mcp/shared';
+import ChatInterface from './components/ChatInterface.svelte';
+import ServerList from './components/ServerList.svelte';
 
 // Using our router instance, we can determine if the application has been mounted.
 router.mode.hash();
 let isMounted = false;
+
+let loading = true;
+let servers: ServerInfo[] = [];
 
 onMount(() => {
   // Load router state on application startup
   const state = getRouterState();
   router.goto(state.url);
   isMounted = true;
+});
+
+onMount(async () => {
+  try {
+    // TODO: Load servers from backend
+    loading = false;
+  } catch (error) {
+    console.error('Failed to load servers:', error);
+    loading = false;
+  }
 });
 </script>
 
@@ -37,3 +53,46 @@ onMount(() => {
     </div>
   </main>
 </Route>
+
+<div class="app-container">
+  {#if loading}
+    <div class="loading">Loading...</div>
+  {:else}
+    <div class="sidebar">
+      <ServerList {servers} />
+    </div>
+    <div class="main-content">
+      <ChatInterface {servers} />
+    </div>
+  {/if}
+</div>
+
+<style>
+  .app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+
+  .sidebar {
+    width: 250px;
+    border-right: 1px solid var(--border-color, #ccc);
+    background: var(--background-secondary);
+  }
+
+  .main-content {
+    flex: 1;
+    overflow: hidden;
+    background: var(--background-primary);
+  }
+</style>

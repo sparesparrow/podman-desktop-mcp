@@ -1,31 +1,23 @@
 {
   "compilerOptions": {
-    "strict":true,
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "lib": [
-      "ES2017",
-      "webworker",
-      "dom",
-    ],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "types": [
-      "node",
-    ],
+    "rootDir": "src",
+    "types": ["node", "vitest"],
     "paths": {
-      "/@shared/*": ["../shared/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src",
-    "types/*.d.ts",
-    "../../types/*.d.ts",
-    "../shared/*.ts",
-    "../shared/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../shared" }
+  ]
 }
